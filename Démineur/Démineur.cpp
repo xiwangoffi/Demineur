@@ -1,7 +1,19 @@
 #include <iostream>
 
-void Board (){
+void printBoard(int board[], int length){
     int divide = 1;
+    for (int i = 0; i < length; i++) {
+        if (i/10 == divide){
+            divide++;
+            printf("\n %d", board[i]);
+        } else{
+			printf(" %d", board[i]);
+        }
+        
+    }
+}
+
+void Board (){
     int board[] = { 0,0,0,0,0,0,0,0,0,0,
                     0,0,0,0,0,0,0,0,0,0,
                     0,0,0,0,0,0,0,0,0,0,
@@ -12,17 +24,10 @@ void Board (){
                     0,0,0,0,0,0,0,0,0,0,
                     0,0,0,0,0,0,0,0,0,0,
                     0,0,0,0,0,0,0,0,0,0, };
+
     int length = sizeof(board) / sizeof(board[0]);
-    for (int i = 0; i < length; i++) {
-        if (i/10 == divide){
-            divide++;
-            printf("\n %d", board[i]);
-        } else{
-			printf(" %d", board[i]);
-        }
-        //printf("%d ", x[i]);
-        
-    }
+
+    printBoard(board, length);
 }
 
 int main()
