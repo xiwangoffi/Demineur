@@ -1,41 +1,54 @@
 #include <iostream>
+#include <stdlib.h>
+#define size 10
 
-void printBoard(int board[], int length){
+void printBoard(char board[], int length){
     int divide = 1;
     for (int i = 0; i < length; i++) {
-        if (i/10 == divide){
+        if (i/size == divide){
             divide++;
-            printf("\n %d", board[i]);
+            if (board[i] == 0) {
+                printf("\n O");
+            }else if(board[i] == 1){
+				printf("\n X");
+            }
         } else{
-			printf(" %d", board[i]);
+			if (board[i] == 0) {
+				printf(" O");
+			}
+			else if (board[i] == 1) {
+				printf(" X");
+			}
         }
         
     }
 }
 
-void Board (){
-    int board[] = { 0,0,0,0,0,0,0,0,0,0,
-                    0,0,0,0,0,0,0,0,0,0,
-                    0,0,0,0,0,0,0,0,0,0,
-                    0,0,0,0,0,0,0,0,0,0,
-                    0,0,0,0,0,0,0,0,0,0,
-                    0,0,0,0,0,0,0,0,0,0,
-                    0,0,0,0,0,0,0,0,0,0,
-                    0,0,0,0,0,0,0,0,0,0,
-                    0,0,0,0,0,0,0,0,0,0,
-                    0,0,0,0,0,0,0,0,0,0, };
-
-    int length = sizeof(board) / sizeof(board[0]);
-
-    printBoard(board, length);
-}
-
 int main()
 {
+    char board[size * size];
 
-    std::cout << "Hello Bebou!\n";
+	int i, n;
 
-    Board();
+	srand(time(NULL));
+
+    std::cout << "Démineur de Bebou UWU!\n";
+
+    for (int i = 0; i < size * size; i++) {
+        board[i] = 0;
+    }
+    
+
+	for (i = 1; i <= 10; i++) {
+		n = rand() % 100;
+		printf("%d\n", n);
+        if (board[n] == 1){
+            i--;
+        }
+        board[n] = 1;
+	}
+
+    printBoard(board, size * size);
 
 }
 
