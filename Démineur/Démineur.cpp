@@ -6,18 +6,21 @@ void printBoard(char board[], int length){
     int divide = 0;
     for (int i = 0; i < length; i++) {
         if (i == 0){
-            printf("   0 1 2 3 4 5 6 7 8 9");
+            printf("   1 2 3 4 5 6 7 8 9 10");
         }
         if (i/size == divide){
             divide++;
             if (board[i] == 0) {
-				printf("\n %d",divide-1);
+				printf("\n %d",divide);
 				printf(" O");
-            }else if(board[i] == 1){
-				printf("\n X");
 			}
 			else if (board[i] == 1) {
-				printf("\n X");
+				printf("\n %d", divide);
+				printf(" X");
+			}
+			else if (board[i] == 2) {
+				printf("\n %d", divide);
+				printf(" $");
 			}
         } else{
 			if (board[i] == 0) {
@@ -26,8 +29,24 @@ void printBoard(char board[], int length){
 			else if (board[i] == 1) {
 				printf(" X");
 			}
+			else if (board[i] == 2) {
+				printf(" $");
+			}
         }
         
+    }
+}
+
+int play(char trappedBoard[], char playableBoard[], int x , int y){
+    if (playableBoard[(x + (y-1) * size) - 1] == 0) {
+        playableBoard[(x + (y-1) * size) - 1] = 2;
+    }
+    if (trappedBoard[(x + (y - 1) * size) - 1] == 1){
+        printf("\tBombe présente ici");
+        return 1;
+    } else{
+        printf("\tFull luck :shrug:");
+        return 0;
     }
 }
 
@@ -35,6 +54,10 @@ int main()
 {
     //The sense of life. https://youtu.be/dQw4w9WgXcQ
     std::cout << "Demineur of BeboUwU!\n";
+
+    //init win/lose
+	int booleanWin = 0;
+	int booleanLoose = 0;
 
     //Boards init
 	char trappedBoard[size * size];
@@ -71,13 +94,23 @@ int main()
     printBoard(trappedBoard, size * size);
 
     //Coords input
-    printf("\nIndiquer une ligne: ");
-    scanf_s("%d", &x);
     printf("\nIndiquer une colonne: ");
+    scanf_s("%d", &x);
+    printf("\nIndiquer une ligne: ");
     scanf_s("%d", &y);
     printf("\nValeur x: %d, Valeur y: %d", x, y);
 
     //Coords insert
+    play(trappedBoard, playableBoard, x, y);
 
+	printf("\nUntrapped :\n");
+	printBoard(playableBoard, size * size);
+
+	printf("\n\nTrapped :\n");
+	printBoard(trappedBoard, size * size);
+
+    while(booleanLoose == 1 || booleanWin == 1){
+        printf("aaaaaaaaaaaaaaa");
+    }
 }
 
