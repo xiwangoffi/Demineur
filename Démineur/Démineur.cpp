@@ -1,43 +1,91 @@
 ﻿#include <iostream>
 #include <stdlib.h>
-#define size 10
+#define size 20
+
+void printNumbers(int clue);
+void play(char trappedBoard[], char playableBoard[]);
+void printBoard(char board[], int length);
+int playVerif(char trappedBoard[], char playableBoard[], int x, int y);
+int main();
+
+
+void printNumbers(int clue) {
+	if (clue == 0) {
+		printf("\n   ");
+	}
+	else if (clue < 10) {
+		printf("\n  %d", clue);
+	}
+	else if (clue >= 10) {
+		printf("\n %d", clue);
+	}
+}
+
+void play(char trappedBoard[], char playableBoard[]){
+    int x;
+	int y;
+
+	printf("\nIndiquer une colonne: ");
+	scanf_s("%d", &x);
+	printf("\nIndiquer une ligne: ");
+	scanf_s("%d", &y);
+	printf("\nValeur x: %d, Valeur y: %d", x, y);
+
+	playVerif(trappedBoard, playableBoard, x, y);
+
+	printf("\nUntrapped :\n");
+	printBoard(playableBoard, size * size);
+
+	printf("\n\nTrapped :\n");
+	printBoard(trappedBoard, size * size);
+}
 
 void printBoard(char board[], int length){
     int divide = 0;
     for (int i = 0; i < length; i++) {
+
         if (i == 0){
-            printf("   1 2 3 4 5 6 7 8 9 10");
+			for (int j = 0; j <= size; j++) {
+				if (j == 0) {
+                    printf("   ");
+                } else if(j < 10){
+                    printf("  %d", j);
+                }else if(j >= 10){
+					printf(" %d", j);
+                }
+                
+            }
         }
         if (i/size == divide){
             divide++;
             if (board[i] == 0) {
-				printf("\n %d",divide);
-				printf(" O");
+                printNumbers(divide);
+				printf("  O");
 			}
 			else if (board[i] == 1) {
-				printf("\n %d", divide);
-				printf(" X");
+				printNumbers(divide);
+				printf("  X");
 			}
 			else if (board[i] == 2) {
-				printf("\n %d", divide);
-				printf(" $");
+				printNumbers(divide);
+				printf("  $");
 			}
         } else{
 			if (board[i] == 0) {
-				printf(" O");
+				printf("  O");
 			}
 			else if (board[i] == 1) {
-				printf(" X");
+				printf("  X");
 			}
 			else if (board[i] == 2) {
-				printf(" $");
+				printf("  $");
 			}
         }
         
     }
 }
 
-int play(char trappedBoard[], char playableBoard[], int x , int y){
+int playVerif(char trappedBoard[], char playableBoard[], int x , int y){
     if (playableBoard[(x + (y-1) * size) - 1] == 0) {
         playableBoard[(x + (y-1) * size) - 1] = 2;
     }
@@ -48,6 +96,7 @@ int play(char trappedBoard[], char playableBoard[], int x , int y){
         printf("\tFull luck :shrug:");
         return 0;
     }
+    
 }
 
 int main()
@@ -65,7 +114,7 @@ int main()
     
     //Random values init
 	int i, random;
-    srand(time(NULL));
+    srand(time_t(NULL));
 
     //Coords Init
     int x = 0;
@@ -78,8 +127,8 @@ int main()
     }
     
     //Random Creation
-    for (i = 1; i <= 10; i++) {
-		random = rand() % 100;
+    for (int i = 1; i <= (size*size)/10; i++) {
+		random = rand() % size*size+10;
         if (trappedBoard[random] == 1) {
             i--;
         }
@@ -93,7 +142,9 @@ int main()
     printf("\n\nTrapped :\n");
     printBoard(trappedBoard, size * size);
 
-    //Coords input
+
+	play(trappedBoard, playableBoard);
+    /*//Coords input
     printf("\nIndiquer une colonne: ");
     scanf_s("%d", &x);
     printf("\nIndiquer une ligne: ");
@@ -101,16 +152,16 @@ int main()
     printf("\nValeur x: %d, Valeur y: %d", x, y);
 
     //Coords insert
-    play(trappedBoard, playableBoard, x, y);
+    playVerif(trappedBoard, playableBoard, x, y);
 
 	printf("\nUntrapped :\n");
 	printBoard(playableBoard, size * size);
 
 	printf("\n\nTrapped :\n");
-	printBoard(trappedBoard, size * size);
+	printBoard(trappedBoard, size * size);*/
 
-    while(booleanLoose == 1 || booleanWin == 1){
+    /*while (booleanLoose == 1 || booleanWin == 1) {
         printf("aaaaaaaaaaaaaaa");
-    }
+    }*/
 }
 
