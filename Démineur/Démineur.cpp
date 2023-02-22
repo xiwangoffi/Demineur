@@ -1,6 +1,6 @@
 ﻿#include <iostream>
 #include <stdlib.h>
-#define size 20
+#define size 10
 
 void printNumbers(int clue);
 int play(char trappedBoard[], char playableBoard[]);
@@ -61,27 +61,36 @@ void printBoard(char board[], int length){
         }
         if (i/size == divide){
             divide++;
-            if (board[i] == 0) {
+            if (board[i] == 10) {
                 printNumbers(divide);
 				printf("  O");
 			}
-			else if (board[i] == 1) {
+			else if (board[i] == 11) {
 				printNumbers(divide);
 				printf("  X");
 			}
-			else if (board[i] == 2) {
+			else if (board[i] == 12) {
 				printNumbers(divide);
 				printf("  $");
 			}
+            if (board[i] < 10)
+            {
+				printNumbers(divide);
+				printf("  %d",board[i]);
+            }
         } else{
-			if (board[i] == 0) {
+			if (board[i] == 10) {
 				printf("  O");
 			}
-			else if (board[i] == 1) {
+			else if (board[i] == 11) {
 				printf("  X");
 			}
-			else if (board[i] == 2) {
+			else if (board[i] == 12) {
 				printf("  $");
+			}
+			if (board[i] < 10)
+			{
+				printf("  %d", board[i]);
 			}
         }
         
@@ -89,10 +98,10 @@ void printBoard(char board[], int length){
 }
 
 int playVerif(char trappedBoard[], char playableBoard[], int x , int y){
-    if (playableBoard[(x + (y-1) * size) - 1] == 0) {
-        playableBoard[(x + (y-1) * size) - 1] = 2;
+    if (playableBoard[(x + (y-1) * size) - 1] == 10) {
+        playableBoard[(x + (y-1) * size) - 1] = 12;
     }
-    if (trappedBoard[(x + (y - 1) * size) - 1] == 1){
+    if (trappedBoard[(x + (y - 1) * size) - 1] == 11){
         printf("\t\nBomb right there");
 
         return 1;
@@ -126,20 +135,41 @@ int main()
 
     //Boards creation
     for (int i = 0; i < size * size; i++) { 
-		trappedBoard[i] = 0;
-		playableBoard[i] = 0;
+		trappedBoard[i] = 10;
+		playableBoard[i] = 10;
     }
     
-    //Random Creation
+    //Random Creation Bomb
     for (int i = 1; i <= (size*size)/10; i++) {
         int bombNumber = size * size;
 		random = rand() % bombNumber; 
-        if (trappedBoard[random] == 1) {
+        if (trappedBoard[random] == 11) {
             i--;
         }
-        trappedBoard[random] = 1;
+        trappedBoard[random] = 11;
     }
 
+    //Verif Number Bomb
+    for (int i = 0; i < size*size; i++)
+    {
+        int numberBomb = 0;
+        if (trappedBoard[i] != 11){
+            if (trappedBoard[i+1] == 11 && (i+1) % size != 0 && i != 0) {
+				numberBomb++;
+			}
+            if (trappedBoard[i - 1] == 11 && (i - 1) % size != 9) {
+				numberBomb++;
+				printf("\n\n%d  %d", (i - 1) % size, i);
+			}
+			if (trappedBoard[i - size] == 11 && i > size) {
+				numberBomb++;
+			}
+            if (numberBomb != 0)
+            {
+                trappedBoard[i] = numberBomb;
+            }
+        }
+    }
     //Boards print
     printf("\nUntrapped :\n");
 	printBoard(playableBoard, size * size);
@@ -149,6 +179,6 @@ int main()
 
     while (booleanLoose == 0 && booleanWin == 0) {
 		booleanLoose = play(trappedBoard, playableBoard);
-        printf("truc: %d", booleanLoose);
     }
+    printf("\n\nPedu");
 }
