@@ -154,16 +154,42 @@ int main()
     {
         int numberBomb = 0;
         if (trappedBoard[i] != 11){
-            if (trappedBoard[i+1] == 11 && (i+1) % size != 0 && i != 0) {
+
+            //Verify Bomb Right
+            if (trappedBoard[i+1] == 11 && (i+1) % size != 0) {
 				numberBomb++;
 			}
+            //Verify Bomb Left
             if (trappedBoard[i - 1] == 11 && (i - 1) % size != 9) {
 				numberBomb++;
-				printf("\n\n%d  %d", (i - 1) % size, i);
 			}
-			if (trappedBoard[i - size] == 11 && i > size) {
+            //Verify Bomb Up
+			if (trappedBoard[i - size] == 11 && i >= size) {
 				numberBomb++;
 			}
+            //Verify Bomb Down
+            if (trappedBoard[i + size] == 11 && i <= (size * size)-size) {
+                numberBomb++;
+            }
+
+            //Verify Bomb Right Up
+            if (trappedBoard[i - (size - 1)] == 11 && i >= size && (i + 1) % size != 0 && i != 0) {
+                numberBomb++;
+            }
+            //Verify Bomb Left Up
+            if (trappedBoard[i - (size + 1)] == 11 && i >= size && (i - 1) % size != 9) {
+                numberBomb++;
+            }
+            //Verify Bomb Right Down
+            if (trappedBoard[i + (size + 1)] == 11 && i <= (size * size) - size && (i + 1) % size != 0) {
+                numberBomb++;
+            }
+            //Verify Bomb Left Down
+            if (trappedBoard[i + (size - 1)] == 11 && i <= (size * size) - size && (i - 1) % size != 9) {
+                numberBomb++;
+            }
+
+            //Verify if is Bomb
             if (numberBomb != 0)
             {
                 trappedBoard[i] = numberBomb;
