@@ -3,7 +3,7 @@
 #define size 20
 
 void printNumbers(int clue);
-void play(char trappedBoard[], char playableBoard[]);
+int play(char trappedBoard[], char playableBoard[]);
 void printBoard(char board[], int length);
 int playVerif(char trappedBoard[], char playableBoard[], int x, int y);
 int main();
@@ -21,9 +21,10 @@ void printNumbers(int clue) {
 	}
 }
 
-void play(char trappedBoard[], char playableBoard[]){
+int play(char trappedBoard[], char playableBoard[]){
     int x;
 	int y;
+    int isBomb;
 
 	printf("\nIndiquer une colonne: ");
 	scanf_s("%d", &x);
@@ -31,13 +32,15 @@ void play(char trappedBoard[], char playableBoard[]){
 	scanf_s("%d", &y);
 	printf("\nValeur x: %d, Valeur y: %d", x, y);
 
-	playVerif(trappedBoard, playableBoard, x, y);
+	isBomb = playVerif(trappedBoard, playableBoard, x, y);
 
 	printf("\nUntrapped :\n");
 	printBoard(playableBoard, size * size);
 
 	printf("\n\nTrapped :\n");
 	printBoard(trappedBoard, size * size);
+    
+    return isBomb;
 }
 
 void printBoard(char board[], int length){
@@ -90,10 +93,11 @@ int playVerif(char trappedBoard[], char playableBoard[], int x , int y){
         playableBoard[(x + (y-1) * size) - 1] = 2;
     }
     if (trappedBoard[(x + (y - 1) * size) - 1] == 1){
-        printf("\tBombe présente ici");
+        printf("\t\nBomb right there");
+
         return 1;
     } else{
-        printf("\tFull luck :shrug:");
+        printf("\t\nOnly luck");
         return 0;
     }
     
@@ -102,7 +106,7 @@ int playVerif(char trappedBoard[], char playableBoard[], int x , int y){
 int main()
 {
     //The sense of life. https://youtu.be/dQw4w9WgXcQ
-    std::cout << "Demineur of BeboUwU!\n";
+    std::cout << "Minesweeper of BeboUwU!\n";
 
     //init win/lose
 	int booleanWin = 0;
@@ -114,7 +118,7 @@ int main()
     
     //Random values init
 	int i, random;
-    srand(time_t(NULL));
+	srand(time(NULL));
 
     //Coords Init
     int x = 0;
@@ -128,7 +132,8 @@ int main()
     
     //Random Creation
     for (int i = 1; i <= (size*size)/10; i++) {
-		random = rand() % size*size+10;
+        int bombNumber = size * size;
+		random = rand() % bombNumber; 
         if (trappedBoard[random] == 1) {
             i--;
         }
@@ -142,26 +147,8 @@ int main()
     printf("\n\nTrapped :\n");
     printBoard(trappedBoard, size * size);
 
-
-	play(trappedBoard, playableBoard);
-    /*//Coords input
-    printf("\nIndiquer une colonne: ");
-    scanf_s("%d", &x);
-    printf("\nIndiquer une ligne: ");
-    scanf_s("%d", &y);
-    printf("\nValeur x: %d, Valeur y: %d", x, y);
-
-    //Coords insert
-    playVerif(trappedBoard, playableBoard, x, y);
-
-	printf("\nUntrapped :\n");
-	printBoard(playableBoard, size * size);
-
-	printf("\n\nTrapped :\n");
-	printBoard(trappedBoard, size * size);*/
-
-    /*while (booleanLoose == 1 || booleanWin == 1) {
-        printf("aaaaaaaaaaaaaaa");
-    }*/
+    while (booleanLoose == 0 && booleanWin == 0) {
+		booleanLoose = play(trappedBoard, playableBoard);
+        printf("truc: %d", booleanLoose);
+    }
 }
-
