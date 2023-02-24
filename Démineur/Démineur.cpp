@@ -91,6 +91,9 @@ void bombCreation(char trappedBoard[], int x , int y) {
     for (int i = 1; i <= (size * size) / 10; i++) {
         int bombNumber = size * size;
         random = rand() % bombNumber;
+        if ((random >= (x + (y - 1) * size) - 2 && random <= x + (y - 1) * size) || (random >= (x + (y - 1) * size) - 2 - size && random <= (x + (y - 1) * size) - size) || (random >= (x + (y - 1) * size) - 2 + size && random <= (x + (y - 1) * size) + size)){
+            random += 3;
+        }
         if (trappedBoard[random] == 11) {
             i--;
         }
@@ -222,10 +225,7 @@ void prePlay(char trappedBoard[], char playableBoard[]) {
     boardCreation(trappedBoard, playableBoard);
     bombCreation(trappedBoard, x, y);
 
-    while (trappedBoard[(x + (y - 1) * size) - 1] != 10) {
-		boardCreation(trappedBoard, playableBoard);
-		bombCreation(trappedBoard, x, y);
-    }
+    
 
     playableBoard[(x + (y - 1) * size) - 1] = 10;
 
