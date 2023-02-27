@@ -1,6 +1,6 @@
 ﻿#include <iostream>
 #include <stdlib.h>
-#define size 20
+#define size 10
 
 void printNumbers(int clue);
 int play(char trappedBoard[], char playableBoard[]);
@@ -62,36 +62,46 @@ void setColor(char board[], int i) {
 void printNumbers(int clue) {
     if (clue == 0) {
         printf("\n   ");
-	}
-    else if (clue == 1){
-		printf("\n  %d", clue);
     }
-	else if (clue < 10) {
-		printf(" %d\n  %d", clue-1, clue);
-	}
-	else if (clue >= 10) {
-		printf(" %d\n %d", clue-1, clue);
-	}
+    else if (clue == 1) {
+        printf("\n  %d", clue);
+    }
+    else if (clue < 10) {
+        printf(" %d\n  %d", clue - 1, clue);
+    }
+    else if (clue >= 10) {
+        printf(" %d\n %d", clue - 1, clue);
+    }
 }
 
-void boardCreation(char trappedBoard[], char playableBoard[]){
-	//Boards creation
-	for (int i = 0; i < size * size; i++) {
-		trappedBoard[i] = 10;
-		playableBoard[i] = 13;
-	}
+void boardCreation(char trappedBoard[], char playableBoard[]) {
+    //Boards creation
+    int taille = 0;
+    scanf_s("%d", &taille);
+    printf("Taille :%d", taille);
+    int** pi = (int**)malloc(sizeof(int*) * taille);
+    for (int i = 0; i < 10; i++)
+    {
+        pi[i] = (int*)malloc(sizeof(int) * taille);
+    }
+    pi[1][1] = 1;
+    printf("&&&&& %d", pi[1][1]);
+    for (int i = 0; i < size * size; i++) {
+        trappedBoard[i] = 10;
+        playableBoard[i] = 13;
+    }
 }
 
-void bombCreation(char trappedBoard[], int x , int y) {
-	//Random values init
-	int i, random;
-	srand(time(NULL));
+void bombCreation(char trappedBoard[], int x, int y) {
+    //Random values init
+    int i, random;
+    srand(time(NULL));
 
     //Random Creation Bomb
     for (int i = 1; i <= (size * size) / 10; i++) {
         int bombNumber = size * size;
         random = rand() % bombNumber;
-        if ((random >= (x + (y - 1) * size) - 2 && random <= x + (y - 1) * size) || (random >= (x + (y - 1) * size) - 2 - size && random <= (x + (y - 1) * size) - size) || (random >= (x + (y - 1) * size) - 2 + size && random <= (x + (y - 1) * size) + size)){
+        if ((random >= (x + (y - 1) * size) - 2 && random <= x + (y - 1) * size) || (random >= (x + (y - 1) * size) - 2 - size && random <= (x + (y - 1) * size) - size) || (random >= (x + (y - 1) * size) - 2 + size && random <= (x + (y - 1) * size) + size)) {
             random += 3;
         }
         if (trappedBoard[random] == 11) {
@@ -151,81 +161,81 @@ void bombCreation(char trappedBoard[], int x , int y) {
 
 void showArea(char trappedBoard[], char playableBoard[], int length) {
     int isO = 1;
-    while (isO == 1){
+    while (isO == 1) {
         isO = 0;
-		for (int i = 0; i < length; i++)
-		{
-			if (playableBoard[i] == 13)
-			{
-				//Verify O Right
-				if (playableBoard[i + 1] == 10 && (i + 1) % size != 0) {
-					playableBoard[i] = trappedBoard[i];
-					isO = 1;
-				}
-				//Verify O Left
-				else if (playableBoard[i - 1] == 10 && (i - 1) % size != size - 1) {
+        for (int i = 0; i < length; i++)
+        {
+            if (playableBoard[i] == 13)
+            {
+                //Verify O Right
+                if (playableBoard[i + 1] == 10 && (i + 1) % size != 0) {
                     playableBoard[i] = trappedBoard[i];
-					isO = 1;
-				}
-				//Verify O Up
-				else if (playableBoard[i - size] == 10 && i >= size) {
+                    isO = 1;
+                }
+                //Verify O Left
+                else if (playableBoard[i - 1] == 10 && (i - 1) % size != size - 1) {
                     playableBoard[i] = trappedBoard[i];
-					isO = 1;
-				}
-				//Verify O Down
-				else if (playableBoard[i + size] == 10 && i <= (size * size) - size) {
+                    isO = 1;
+                }
+                //Verify O Up
+                else if (playableBoard[i - size] == 10 && i >= size) {
                     playableBoard[i] = trappedBoard[i];
-					isO = 1;
-				}
+                    isO = 1;
+                }
+                //Verify O Down
+                else if (playableBoard[i + size] == 10 && i <= (size * size) - size) {
+                    playableBoard[i] = trappedBoard[i];
+                    isO = 1;
+                }
 
-				//Verify O Right Up
-				else if (playableBoard[i - (size - 1)] == 10 && i >= size && (i + 1) % size != 0 && i != 0) {
+                //Verify O Right Up
+                else if (playableBoard[i - (size - 1)] == 10 && i >= size && (i + 1) % size != 0 && i != 0) {
                     playableBoard[i] = trappedBoard[i];
-					isO = 1;
-				}
-				//Verify O Left Up
-				else if (playableBoard[i - (size + 1)] == 10 && i >= size && (i - 1) % size != size - 1) {
+                    isO = 1;
+                }
+                //Verify O Left Up
+                else if (playableBoard[i - (size + 1)] == 10 && i >= size && (i - 1) % size != size - 1) {
                     playableBoard[i] = trappedBoard[i];
-					isO = 1;
-				}
-				//Verify O Right Down
-				else if (playableBoard[i + (size + 1)] == 10 && i <= (size * size) - size && (i + 1) % size != 0) {
+                    isO = 1;
+                }
+                //Verify O Right Down
+                else if (playableBoard[i + (size + 1)] == 10 && i <= (size * size) - size && (i + 1) % size != 0) {
                     playableBoard[i] = trappedBoard[i];
-					isO = 1;
-				}
-				//Verify O Left Down
-				else if (playableBoard[i + (size - 1)] == 10 && i <= (size * size) - size && (i - 1) % size != size - 1 && i != 0) {
+                    isO = 1;
+                }
+                //Verify O Left Down
+                else if (playableBoard[i + (size - 1)] == 10 && i <= (size * size) - size && (i - 1) % size != size - 1 && i != 0) {
                     playableBoard[i] = trappedBoard[i];
-					isO = 1;
-				}
+                    isO = 1;
+                }
 
-			}
-		}
+            }
+        }
     }
-    
+
 }
 
 void prePlay(char trappedBoard[], char playableBoard[]) {
     int x;
     int y;
 
-	printf("\nIndiquer une colonne entre (1 et %d): ", size);
-	scanf_s("%d", &x);
-	printf("\nIndiquer une ligne entre (1 et %d): ", size);
-	scanf_s("%d", &y);
+    printf("\nIndiquer une colonne entre (1 et %d): ", size);
+    scanf_s("%d", &x);
+    printf("\nIndiquer une ligne entre (1 et %d): ", size);
+    scanf_s("%d", &y);
 
-	while (x > size || x < 1 || y > size || y < 1) {
-		printf("\nValeurs non valide\n");
-		printf("\nIndiquer une colonne entre (1 et %d): ", size);
-		scanf_s("%d", &x);
-		printf("\nIndiquer une ligne entre (1 et %d): ", size);
-		scanf_s("%d", &y);
+    while (x > size || x < 1 || y > size || y < 1) {
+        printf("\nValeurs non valide\n");
+        printf("\nIndiquer une colonne entre (1 et %d): ", size);
+        scanf_s("%d", &x);
+        printf("\nIndiquer une ligne entre (1 et %d): ", size);
+        scanf_s("%d", &y);
     }
 
     boardCreation(trappedBoard, playableBoard);
     bombCreation(trappedBoard, x, y);
 
-    
+
 
     playableBoard[(x + (y - 1) * size) - 1] = 10;
 
@@ -248,18 +258,18 @@ int play(char trappedBoard[], char playableBoard[]) {
     printf("\nVoulez-vous mettre un drapeau ? yes = 1 or no = 0\n");
     scanf_s("%d", &answer);
 
-	printf("\nIndiquer une colonne entre (1 et %d): ", size);
-	scanf_s("%d", &x);
-	printf("\nIndiquer une ligne entre (1 et %d): ", size);
-	scanf_s("%d", &y);
+    printf("\nIndiquer une colonne entre (1 et %d): ", size);
+    scanf_s("%d", &x);
+    printf("\nIndiquer une ligne entre (1 et %d): ", size);
+    scanf_s("%d", &y);
 
-	while (x > size || x < 1 || y > size || y < 1) {
-		printf("\nValeurs non valide\n");
-		printf("\nIndiquer une colonne entre (1 et %d): ", size);
-		scanf_s("%d", &x);
-		printf("\nIndiquer une ligne entre (1 et %d): ", size);
-		scanf_s("%d", &y);
-	}
+    while (x > size || x < 1 || y > size || y < 1) {
+        printf("\nValeurs non valide\n");
+        printf("\nIndiquer une colonne entre (1 et %d): ", size);
+        scanf_s("%d", &x);
+        printf("\nIndiquer une ligne entre (1 et %d): ", size);
+        scanf_s("%d", &y);
+    }
 
     if (answer == 1) {
         flag = 1;
@@ -270,9 +280,9 @@ int play(char trappedBoard[], char playableBoard[]) {
 
     isBomb = playVerif(trappedBoard, playableBoard, x, y, flag);
 
-    showArea(trappedBoard, playableBoard, size*size);
+    showArea(trappedBoard, playableBoard, size * size);
 
-	//Boards print
+    //Boards print
     printf("\nMinesweeper :\n");
     printBoard(playableBoard, size * size);
 
@@ -297,7 +307,7 @@ void printBoard(char board[], int length) {
 
             }
         }
-		
+
         if (i / size == divide) {
             divide++;
             if (board[i] == 10) {
@@ -308,8 +318,8 @@ void printBoard(char board[], int length) {
             else if (board[i] == 11) {
                 printNumbers(divide);
                 cyan();
-				printf("  X");
-				white();
+                printf("  X");
+                white();
             }
             else if (board[i] == 12) {
                 printNumbers(divide);
@@ -356,20 +366,20 @@ void printBoard(char board[], int length) {
                 white();
             }
         }
-		if (i == (size * size) - 1) {
-			for (int j = 0; j <= size; j++) {
-				if (j == 0) {
-					printf(" %d\n   ",size);
-				}
-				else if (j < 10) {
-					printf("  %d", j);
-				}
-				else if (j >= 10) {
-					printf(" %d", j);
-				}
+        if (i == (size * size) - 1) {
+            for (int j = 0; j <= size; j++) {
+                if (j == 0) {
+                    printf(" %d\n   ", size);
+                }
+                else if (j < 10) {
+                    printf("  %d", j);
+                }
+                else if (j >= 10) {
+                    printf(" %d", j);
+                }
 
-			}
-		}
+            }
+        }
     }
 }
 
@@ -378,20 +388,21 @@ int playVerif(char trappedBoard[], char playableBoard[], int x, int y, int flag)
 
     if (flag == 1 && playableBoard[(x + (y - 1) * size) - 1] == 13) {
         playableBoard[(x + (y - 1) * size) - 1] = 12;
-		for (int i = 0; i < size * size; i++)
-		{
-			if (playableBoard[i] == 12 || playableBoard[i] == 13) {
-				victory++;
-			}
-		}
-		if (victory == (size * size) / 10) {
-			return 2;
-		}
-		else {
-			return 0;
-		}
-    } else if(flag == 1) {
-		return 0;
+        for (int i = 0; i < size * size; i++)
+        {
+            if (playableBoard[i] == 12 || playableBoard[i] == 13) {
+                victory++;
+            }
+        }
+        if (victory == (size * size) / 10) {
+            return 2;
+        }
+        else {
+            return 0;
+        }
+    }
+    else if (flag == 1) {
+        return 0;
     }
     else {
         if (trappedBoard[(x + (y - 1) * size) - 1] == 11) {
@@ -403,17 +414,18 @@ int playVerif(char trappedBoard[], char playableBoard[], int x, int y, int flag)
             playableBoard[(x + (y - 1) * size) - 1] = trappedBoard[(x + (y - 1) * size) - 1];
             for (int i = 0; i < size * size; i++)
             {
-                if (playableBoard[i] == 12 || playableBoard[i] == 13){
+                if (playableBoard[i] == 12 || playableBoard[i] == 13) {
                     victory++;
                 }
             }
-            if (victory == (size * size)/10){
+            if (victory == (size * size) / 10) {
                 return 2;
-            }else{
-				return 0;
+            }
+            else {
+                return 0;
             }
         }
-        
+
     }
 
 }
@@ -434,10 +446,10 @@ int main() {
     while (booleanLoose == 0) {
         booleanLoose = play(trappedBoard, playableBoard);
     }
-    if (booleanLoose == 2){
-		printf("\n\Ganer");
+    if (booleanLoose == 2) {
+        printf("\n\Ganer");
     }
-	else if (booleanLoose == 1) {
-		printf("\n\nPedu");
+    else if (booleanLoose == 1) {
+        printf("\n\nPedu");
     }
 }
