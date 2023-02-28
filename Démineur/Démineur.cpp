@@ -1,14 +1,19 @@
 ﻿#include <iostream>
 #include <stdlib.h>
-#define size 10
+#include <Windows.h>
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
 
 void printNumbers(int clue);
-int play(char trappedBoard[], char playableBoard[]);
-void printBoard(char board[], int length);
-int playVerif(char trappedBoard[], char playableBoard[], int x, int y, int flag);
-void showArea(char trappedBoard[], char playableBoard[], int length);
-void bombCreation(char trappedBoard[], int x, int y);
-void boardCreation(char trappedBoard[], char playableBoard[]);
+void printBoard(int* board, int size);
+int playVerif(int* trappedBoard, int* playableBoard, int x, int y, int flag, int size);
+void showArea(int* trappedBoard, int* playableBoard, int size);
+void bombCreation(int* trappedBoard, int x, int y, int size);
+int play(int* trappedBoard, int* playableBoard, int size);
+void boardCreation(int* trappedBoard, int* playableBoard);
+void prePlay(int* trappedBoard, int* playableBoard, int size);
+void showMine(int* trappedBoard, int* playableBoard, int size);
 int main();
 void red();
 void white();
@@ -16,6 +21,7 @@ void green();
 void cyan();
 void yellow();
 void blue();
+void setColor(int* board, int i);
 
 void red() {
     printf("\033[0;31m");
@@ -44,7 +50,7 @@ void blue() {
     printf("\033[0;34m");
 }
 
-void setColor(char board[], int i) {
+void setColor(int* board, int i) {
     if (board[i] == 1 || board[i] == 2) {
         green();
     }
@@ -57,6 +63,28 @@ void setColor(char board[], int i) {
     else if (board[i] == 7 || board[i] == 8) {
         red();
     }
+}
+
+int isInt(){
+	char entree[100];
+	int nombre;
+	char* fin;
+	printf("Entrez un nombre entier : ");
+	while (fgets(entree, 100, stdin) != NULL) {
+		// Supprimer le caractère de retour à la ligne à la fin de l'entrée
+		entree[strcspn(entree, "\n")] = '\0';
+		// Vérifier si l'entrée est un nombre entier valide
+		if (isdigit(entree[0]) || entree[0] == '+' || entree[0] == '-') {
+			nombre = strtol(entree, &fin, 10);
+			if (*fin == '\0') {
+				printf("Vous avez entré le nombre entier %d.\n", nombre);
+                return nombre;
+				break;
+			}
+		}
+		printf("Erreur : veuillez entrer un nombre entier valide.\n");
+		printf("Entrez un nombre entier : ");
+	}
 }
 
 void printNumbers(int clue) {
@@ -74,25 +102,7 @@ void printNumbers(int clue) {
     }
 }
 
-void boardCreation(char trappedBoard[], char playableBoard[]) {
-    //Boards creation
-    int taille = 0;
-    scanf_s("%d", &taille);
-    printf("Taille :%d", taille);
-    int** pi = (int**)malloc(sizeof(int*) * taille);
-    for (int i = 0; i < 10; i++)
-    {
-        pi[i] = (int*)malloc(sizeof(int) * taille);
-    }
-    pi[1][1] = 1;
-    printf("&&&&& %d", pi[1][1]);
-    for (int i = 0; i < size * size; i++) {
-        trappedBoard[i] = 10;
-        playableBoard[i] = 13;
-    }
-}
-
-void bombCreation(char trappedBoard[], int x, int y) {
+void bombCreation(int* trappedBoard, int x, int y, int size) {
     //Random values init
     int i, random;
     srand(time(NULL));
@@ -159,11 +169,11 @@ void bombCreation(char trappedBoard[], int x, int y) {
     }
 }
 
-void showArea(char trappedBoard[], char playableBoard[], int length) {
+void showArea(int* trappedBoard, int* playableBoard, int size) {
     int isO = 1;
     while (isO == 1) {
         isO = 0;
-        for (int i = 0; i < length; i++)
+        for (int i = 0; i < size * size; i++)
         {
             if (playableBoard[i] == 13)
             {
@@ -215,7 +225,18 @@ void showArea(char trappedBoard[], char playableBoard[], int length) {
 
 }
 
-void prePlay(char trappedBoard[], char playableBoard[]) {
+void showMine(int* trappedBoard, int* playableBoard, int size) {
+    for (int i = 0; i < size * size; i++) {
+        if (trappedBoard[i] == 11) {
+            printf("\n");
+            Sleep(400);
+			playableBoard[i] = 11;
+			printBoard(playableBoard, size);
+        }
+    }
+}
+
+void prePlay(int* trappedBoard, int* playableBoard, int size) {
     int x;
     int y;
 
@@ -232,22 +253,21 @@ void prePlay(char trappedBoard[], char playableBoard[]) {
         scanf_s("%d", &y);
     }
 
-    boardCreation(trappedBoard, playableBoard);
-    bombCreation(trappedBoard, x, y);
+    bombCreation(trappedBoard, x, y, size);
 
 
 
     playableBoard[(x + (y - 1) * size) - 1] = 10;
 
-    showArea(trappedBoard, playableBoard, size * size);
+    showArea(trappedBoard, playableBoard, size);
 
     //Boards print
     printf("\nMinesweeper :\n");
-    printBoard(playableBoard, size * size);
+    printBoard(playableBoard, size);
 
 }
 
-int play(char trappedBoard[], char playableBoard[]) {
+int play(int* trappedBoard, int* playableBoard, int size) {
     int x;
     int y;
     int flag = 0;
@@ -278,20 +298,20 @@ int play(char trappedBoard[], char playableBoard[]) {
         flag = 0;
     }
 
-    isBomb = playVerif(trappedBoard, playableBoard, x, y, flag);
+    isBomb = playVerif(trappedBoard, playableBoard, x, y, flag, size);
 
-    showArea(trappedBoard, playableBoard, size * size);
+    showArea(trappedBoard, playableBoard, size);
 
     //Boards print
     printf("\nMinesweeper :\n");
-    printBoard(playableBoard, size * size);
+    printBoard(playableBoard, size);
 
     return isBomb;
 }
 
-void printBoard(char board[], int length) {
+void printBoard(int* board, int size) {
     int divide = 0;
-    for (int i = 0; i < length; i++) {
+    for (int i = 0; i < size * size; i++) {
 
         if (i == 0) {
             for (int j = 0; j <= size; j++) {
@@ -383,7 +403,7 @@ void printBoard(char board[], int length) {
     }
 }
 
-int playVerif(char trappedBoard[], char playableBoard[], int x, int y, int flag) {
+int playVerif(int* trappedBoard, int* playableBoard, int x, int y, int flag, int size) {
     int victory = 0;
 
     if (flag == 1 && playableBoard[(x + (y - 1) * size) - 1] == 13) {
@@ -438,18 +458,33 @@ int main() {
     int booleanLoose = 0;
 
     //Boards init
-    char trappedBoard[size * size];
-    char playableBoard[size * size];
 
-    prePlay(trappedBoard, playableBoard);
+	int size = 0;
+	printf("Taille entre 5 et 30 (un entier pls): ");
+	size = isInt();
+
+    while (size < 5 || size > 30) {
+		size = isInt();
+    }
+	int* playableBoard = (int*)malloc(sizeof(int) * (size * size));
+	int* trappedBoard = (int*)malloc(sizeof(int) * (size * size));
+
+	for (int i = 0; i < size * size; i++) {
+		trappedBoard[i] = 10;
+		playableBoard[i] = 13;
+	}
+
+    prePlay(trappedBoard, playableBoard, size);
 
     while (booleanLoose == 0) {
-        booleanLoose = play(trappedBoard, playableBoard);
+        booleanLoose = play(trappedBoard, playableBoard, size);
     }
     if (booleanLoose == 2) {
-        printf("\n\Ganer");
+        printf("\n\Ganer\n");
     }
     else if (booleanLoose == 1) {
-        printf("\n\nPedu");
-    }
+		showMine(trappedBoard, playableBoard, size);
+		printf("\n\nPedu\n");
+    } 
+
 }
