@@ -69,7 +69,6 @@ int isInt(){
 	char entree[100];
 	int nombre;
 	char* fin;
-	printf("Entrez un nombre entier : ");
 	while (fgets(entree, 100, stdin) != NULL) {
 		// Supprimer le caractère de retour à la ligne à la fin de l'entrée
 		entree[strcspn(entree, "\n")] = '\0';
@@ -77,7 +76,6 @@ int isInt(){
 		if (isdigit(entree[0]) || entree[0] == '+' || entree[0] == '-') {
 			nombre = strtol(entree, &fin, 10);
 			if (*fin == '\0') {
-				printf("Vous avez entré le nombre entier %d.\n", nombre);
                 return nombre;
 				break;
 			}
@@ -222,7 +220,6 @@ void showArea(int* trappedBoard, int* playableBoard, int size) {
             }
         }
     }
-
 }
 
 void showMine(int* trappedBoard, int* playableBoard, int size) {
@@ -241,16 +238,16 @@ void prePlay(int* trappedBoard, int* playableBoard, int size) {
     int y;
 
     printf("\nIndiquer une colonne entre (1 et %d): ", size);
-    scanf_s("%d", &x);
+    x = isInt();
     printf("\nIndiquer une ligne entre (1 et %d): ", size);
-    scanf_s("%d", &y);
+    y = isInt();
 
     while (x > size || x < 1 || y > size || y < 1) {
         printf("\nValeurs non valide\n");
         printf("\nIndiquer une colonne entre (1 et %d): ", size);
-        scanf_s("%d", &x);
+		x = isInt();
         printf("\nIndiquer une ligne entre (1 et %d): ", size);
-        scanf_s("%d", &y);
+		y = isInt();
     }
 
     bombCreation(trappedBoard, x, y, size);
@@ -464,6 +461,7 @@ int main() {
 	size = isInt();
 
     while (size < 5 || size > 30) {
+		printf("\nValeur non valide \nTaille entre 5 et 30 (un entier pls): ");
 		size = isInt();
     }
 	int* playableBoard = (int*)malloc(sizeof(int) * (size * size));
