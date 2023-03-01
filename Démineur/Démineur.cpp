@@ -78,7 +78,7 @@ int isInt(){
 		if (isdigit(entree[0]) || entree[0] == '+' || entree[0] == '-') {
 			nombre = strtol(entree, &fin, 10);
 			if (*fin == '\0') {
-                return nombre;
+				return nombre;
 				break;
 			}
 		}
@@ -279,19 +279,19 @@ int play(int* trappedBoard, int* playableBoard, int size, int nbBomb) {
     //quémande la position au joueur
 
     printf("\nVoulez-vous mettre un drapeau ? yes = 1 or no = 0\n");
-    scanf_s("%d", &answer);
+    answer = isInt();
 
     printf("\nIndiquer une colonne entre (1 et %d): ", size);
-    scanf_s("%d", &x);
+    x = isInt();
     printf("\nIndiquer une ligne entre (1 et %d): ", size);
-    scanf_s("%d", &y);
+    y = isInt();
 
     while (x > size || x < 1 || y > size || y < 1) { // Vérifie si les valeurs introduites entrent dans le tableau
         printf("\nValeurs non valide\n");
         printf("\nIndiquer une colonne entre (1 et %d): ", size);
-        scanf_s("%d", &x);
+		x = isInt();
         printf("\nIndiquer une ligne entre (1 et %d): ", size);
-        scanf_s("%d", &y);
+		y = isInt();
     }
 
 
@@ -436,7 +436,7 @@ int playVerif(int* trappedBoard, int* playableBoard, int x, int y, int flag, int
                     victory++;
                 }
             }
-            if (victory == (size * size) / 10) { // S'il y a autant de drapeaux que de cases non découvertes s'est gagner
+            if (victory == nbBomb) { // S'il y a autant de drapeaux que de cases non découvertes s'est gagner
                 return 2;
             }
             else { // sinon rien
@@ -462,11 +462,11 @@ int main() {
 
     // Quémande la taille du tableau au joueur
 
-	printf("Taille entre 5 et 30 (un entier pls): ");
+	printf("Taille entre 6 et 30 (un entier pls): ");
 	size = isInt();
 
-    while (size < 5 || size > 30) { // Vérifie si la valeur input est < à 5 ou > à 30
-		printf("\nValeur non valide \nTaille entre 5 et 30 (un entier pls): ");
+    while (size < 6 || size > 30) { // Vérifie si la valeur input est < à 5 ou > à 30
+		printf("\nValeur non valide \nTaille entre 6 et 30 (un entier pls): ");
 		size = isInt();
     }
 
@@ -499,12 +499,36 @@ int main() {
     while (booleanLoose == 0) { // S'il n'y a rien, continué
         booleanLoose = play(trappedBoard, playableBoard, size, nbBomb);
     }
-    if (booleanLoose == 2) { // Si gagner s'est gagner
+	if (booleanLoose == 2) { // Si gagner s'est gagner
+		showMine(trappedBoard, playableBoard, size);
         printf("\n\Ganer\n");
+        green();
+        printf("  /$$$$$$                                         \n");
+        printf(" /$$__  $$                                        \n");
+        printf("| $$  \\__/  /$$$$$$  /$$$$$$$   /$$$$$$   /$$$$$$ \n");
+        printf("| $$ /$$$$ |____  $$| $$__  $$ /$$__  $$ /$$__  $$\n");
+        printf("| $$|_  $$  /$$$$$$$| $$  \\ $$| $$$$$$$$| $$  \\__/\n");
+        printf("| $$  \\ $$ /$$__  $$| $$  | $$| $$_____/| $$      \n");
+        printf("|  $$$$$$/|  $$$$$$$| $$  | $$|  $$$$$$$| $$      \n");
+        printf(" \\______/  \\_______/|__/  |__/ \\_______/|__/      \n");
+        white();
+                                                  
+                                                  
+                                                  
     }
     else if (booleanLoose == 1) { // Si perdu s'est perdu et affiche les bombes
 		showMine(trappedBoard, playableBoard, size);
-		printf("\n\nPedu\n");
+		printf("\n\n");
+        red();
+		printf("     /$$$$$$$                 /$$          \n");
+		printf("    | $$__  $$               | $$          \n");
+		printf("    | $$  \\ $$ /$$$$$$   /$$$$$$$ /$$   /$$\n");
+		printf("    | $$$$$$$//$$__  $$ /$$__  $$| $$  | $$\n");
+		printf("    | $$____/| $$$$$$$$| $$  | $$| $$  | $$\n");
+		printf("    | $$     | $$_____/| $$  | $$| $$  | $$\n");
+		printf("    | $$     |  $$$$$$$|  $$$$$$$|  $$$$$$/\n");
+		printf("    |__/      \\_______/ \\_______/ \\______/ \n");
+        white();
     } 
 
 }
